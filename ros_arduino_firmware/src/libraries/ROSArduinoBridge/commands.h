@@ -11,11 +11,13 @@
 #define DIGITAL_READ   'd'
 #define READ_ENCODERS  'e'
 #define MOTOR_SPEEDS   'm'
+#define MOTOR_RAW_PWM  'o'
 #define PING           'p'
 #define RESET_ENCODERS 'r'
 #define SERVO_WRITE    's'
 #define SERVO_READ     't'
 #define UPDATE_PID     'u'
+#define VERSION        'v'
 #define DIGITAL_WRITE  'w'
 #define ANALOG_WRITE   'x'
 #define LEFT            0

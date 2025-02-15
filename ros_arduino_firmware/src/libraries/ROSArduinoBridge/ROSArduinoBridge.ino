@@ -45,8 +45,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-//#define USE_BASE      // Enable the base controller code
-#undef USE_BASE     // Disable the base controller code
+#define USE_BASE      // Enable the base controller code
+//#undef USE_BASE     // Disable the base controller code
 
 /* Define the motor controller and encoder library you are using */
 #ifdef USE_BASE
@@ -66,8 +66,8 @@
    //#define L298_MOTOR_DRIVER
 #endif
 
-#define USE_SERVOS  // Enable use of PWM servos as defined in servos.h
-//#undef USE_SERVOS     // Disable use of PWM servos
+//#define USE_SERVOS  // Enable use of PWM servos as defined in servos.h
+#undef USE_SERVOS     // Disable use of PWM servos
 
 /* Serial port baud rate */
 #define BAUDRATE     57600
@@ -114,7 +114,7 @@
 
   /* Stop the robot if it hasn't received a movement command
    in this number of milliseconds */
-  #define AUTO_STOP_INTERVAL 2000
+  #define AUTO_STOP_INTERVAL 2
   long lastMotorCommand = AUTO_STOP_INTERVAL;
 #endif
 
@@ -185,6 +185,9 @@ int runCommand() {
   case PING:
     Serial.println(Ping(arg1));
     break;
+  case VERSION:
+    Serial.println("Arduino Bridge v1.01"); 
+    break;
 #ifdef USE_SERVOS
   case SERVO_WRITE:
     servos[arg1].setTargetPosition(arg2);
@@ -219,6 +222,14 @@ int runCommand() {
     rightPID.TargetTicksPerFrame = arg2;
     Serial.println("OK"); 
     break;
+  case MOTOR_RAW_PWM:
+    /* Reset the auto stop timer */
+    lastMotorCommand = millis();
+    resetPID();
+    moving = 0; // Sneaky way to temporarily disable the PID
+    setMotorSpeeds(arg1, arg2);
+    Serial.println("OK"); 
+    break;  
   case UPDATE_PID:
     while ((str = strtok_r(p, ":", &p)) != '\0') {
        pid_args[i] = atoi(str);
